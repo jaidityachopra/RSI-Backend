@@ -1,0 +1,30 @@
+name: Daily RSI Divergence Alert
+
+on:
+  schedule:
+    - cron: '30 10 * * 1-5'  # Runs at 4:00 PM IST, Monday to Friday
+  workflow_dispatch:
+
+jobs:
+  run-scan:
+    runs-on: ubuntu-latest
+
+    env:
+      SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run RSI Divergence Script
+        run: python rsi.py
